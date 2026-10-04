@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snake & Ladder - Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1f2a44;
+    --muted: #5d6b8a;
+    --paper: #ffffff;
+    --bg1: #ffe9a8;
+    --bg2: #ffc2a1;
+    --bg3: #a8e6cf;
+    --bot: #6c5ce7;
+    --p2: #0984e3;
+    --p3: #00b894;
+    --p4: #e17055;
+    --radius: clamp(14px, 2.5vw, 22px);
+    --pad: clamp(16px, 4vw, 32px);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: max(var(--pad), env(safe-area-inset-top)) max(var(--pad), env(safe-area-inset-right))
+             max(var(--pad), env(safe-area-inset-bottom)) max(var(--pad), env(safe-area-inset-left));
+    font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 15% 20%, var(--bg3) 0, transparent 45%),
+      radial-gradient(circle at 85% 80%, var(--bg2) 0, transparent 45%),
+      var(--bg1);
+    background-attachment: fixed;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(16px, 3vw, 28px);
+  }
+
+  .logo {
+    text-align: center;
+  }
+
+  .logo .emoji {
+    font-size: clamp(2.2rem, 7vw, 3.4rem);
+    letter-spacing: .2em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: 'Fredoka', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 7vw, 3.6rem);
+    line-height: 1.05;
+    color: var(--ink);
+    text-shadow: 3px 3px 0 rgba(255,255,255,.7);
+  }
+
+  .card {
+    width: 100%;
+    background: var(--paper);
+    border-radius: calc(var(--radius) + 6px);
+    padding: clamp(20px, 4vw, 36px);
+    box-shadow: 0 18px 40px rgba(31,42,68,.18), 0 2px 0 rgba(255,255,255,.8) inset;
+  }
+
+  .card h2 {
+    margin: 0 0 4px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.15rem, 3.2vw, 1.5rem);
+    text-align: center;
+  }
+
+  .card p {
+    margin: 0 0 clamp(16px, 3vw, 24px);
+    text-align: center;
+    color: var(--muted);
+    font-size: clamp(.9rem, 2.4vw, 1rem);
+  }
+
+  .modes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(10px, 2vw, 16px);
+  }
+
+  .mode {
+    --c: var(--p2);
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 64px;
+    padding: 14px 18px;
+    text-align: left;
+    font: inherit;
+    color: #fff;
+    background: var(--c);
+    border-radius: var(--radius);
+    box-shadow: 0 5px 0 color-mix(in srgb, var(--c) 70%, #000);
+    transition: transform .12s ease, box-shadow .12s ease, filter .2s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mode:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 color-mix(in srgb, var(--c) 70%, #000);
+  }
+
+  .mode:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--c) 70%, #000);
+  }
+
+  .mode:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  .mode .ico {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: clamp(40px, 9vw, 52px);
+    aspect-ratio: 1;
+    font-size: clamp(1.3rem, 4vw, 1.7rem);
+    background: rgba(255,255,255,.22);
+    border-radius: 50%;
+  }
+
+  .mode .txt {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .mode .title {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.05rem, 3.4vw, 1.3rem);
+    line-height: 1.2;
+  }
+
+  .mode .sub {
+    font-weight: 600;
+    font-size: clamp(.8rem, 2.4vw, .92rem);
+    opacity: .9;
+  }
+
+  .mode.bot {
+    --c: var(--bot);
+  }
+
+  .mode.p2 {
+    --c: var(--p2);
+  }
+
+  .mode.p3 {
+    --c: var(--p3);
+  }
+
+  .mode.p4 {
+    --c: var(--p4);
+  }
+
+  @media (min-width: 560px) {
+    .modes {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .mode.bot {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .wrap {
+      max-width: 780px;
+    }
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    body {
+      place-items: start center;
+    }
+
+    .logo .emoji {
+      display: none;
+    }
+
+    .card p {
+      display: none;
+    }
+
+    .modes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mode.bot {
+      grid-column: 1 / -1;
+    }
+
+    .mode {
+      min-height: 54px;
+      padding: 10px 14px;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .mode .sub {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mode {
+      transition: none;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="logo">
+      <span class="emoji" aria-hidden="true">🐍🎲🪜</span>
+      <h1>Snake &amp; Ladder</h1>
+    </header>
+
+    <section class="card" aria-labelledby="mode-title">
+      <h2 id="mode-title">Select Game Mode</h2>
+      <p>Pick how you want to play.</p>
+
+      <div class="modes">
+        <button class="mode bot" type="button" onclick="selectMode(2, true)">
+          <span class="ico" aria-hidden="true">🤖</span>
+          <span class="txt"><span class="title">1 Player vs Bot</span><span class="sub">Play solo against the computer</span></span>
+        </button>
+
+        <button class="mode p2" type="button" onclick="selectMode(2, false)">
+          <span class="ico" aria-hidden="true">👥</span>
+          <span class="txt"><span class="title">2 Players</span><span class="sub">Head to head</span></span>
+        </button>
+
+        <button class="mode p3" type="button" onclick="selectMode(3, false)">
+          <span class="ico" aria-hidden="true">🧑‍🤝‍🧑</span>
+          <span class="txt"><span class="title">3 Players</span><span class="sub">Three-way race</span></span>
+        </button>
+
+        <button class="mode p4" type="button" onclick="selectMode(4, false)" style="grid-column: 1 / -1;">
+          <span class="ico" aria-hidden="true">🎉</span>
+          <span class="txt"><span class="title">4 Players</span><span class="sub">Full house</span></span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function selectMode(players, isBot) {
+      window.location.href = `index.html?players=${players}&bot=${isBot}`;
+    }
+  </script>
+</body>
+</html>
